@@ -1,0 +1,9 @@
+{
+  "name": "Water",
+  "version": "0.1.0",
+  "description": "A realtime audio parameterization demo based on a recording from Lamma Island, Hong Kong",
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.5.0"
+  }
+}

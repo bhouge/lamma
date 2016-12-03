@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+<link href='http://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet' type='text/css'>
+<meta charset="UTF-8">
+<title>Lamma Island</title>
+<style>
+	body { font: 13px Helvetica, Arial; }
+
+	h1 {
+		text-align: center;
+		font: 130px/0.8 'Great Vibes', Helvetica, sans-serif;
+  	 	color: #000000	;
+  		text-shadow: 4px 4px 3px rgba(0,0,0,0.1); 
+	}
+
+	h2{
+		text-align: center;
+	}
+
+	button{
+		background: #A9A9A9;
+		padding: 15px 32px;
+		border: none;
+		color: #fff;
+		text-align: center;
+		font:  50px 'Great Vibes', Helvetica, sans-serif;
+	}
+</style>
+</head>
+<body>
+
+<h1>The Soothing Sounds of Lamma Island</h1>
+<h2>Lamma Island, Hong Kong, Summer 2012</h2>
+
+<div id="controlButtons" style = "text-align: center">
+<button id="listen" class="off" > Loading </button>
+</div>
+
+<h3>
+Press "Listen" to begin. 
+Turn your phone upside down to help the sound propagate and poke it periodically to keep it from going to sleep during the performance.
+Chrome or Firefox are the recommended browsers on Android devices.
+</h3>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="scripts/GranularSynth.js"></script>
+
+<script type="text/javascript">
+var socket = io();
+socket.on('control message', function(msg){
+	//console.log(msg);
+	var msgArray = msg.split('/');
+	//console.log(msgArray);
+	//enforcing OSC syntax, so the same messages can be parsed by CNMAT's Max external OSC-route
+	//more info here: http://cnmat.berkeley.edu/patch/4029
+	if (msgArray[1].slice(0, 5) != "panic") {
+		if (msgArray[1] == "water") {
+			if (msgArray[2].slice(0, 5) == "metro") {
+				if (listenButton.className == "on") {
+					if (msgArray[2].slice(-1) == '0') {
+						console.log("Turning metronome off.");
+						if (waterSynth.isPlaying) {
+							waterSynth.stop();
+						}
+					} else {
+						console.log("Turning metronome on.");
+						//testSound(0);
+						if (!waterSynth.isPlaying) {
+							waterSynth.play();
+						}
+					}
+				}
+			}
+			if (msgArray[2] == "slider") {
+				var sliderMsgArray = msgArray[3].split(' ');
+				var sliderIndex = sliderMsgArray[0];
+				var sliderValue = sliderMsgArray[1];
+				console.log("slider " + sliderIndex + ": " + sliderValue);
+				setSliderValue(sliderIndex, sliderValue);
+			}
+		}
+	} else {
+		console.log("panic!");
+		stopEverything();
+	}
+});
+socket.on('get type', function(msg){
+	//console.log("client's secret message is " + msg);
+	socket.emit('i am', "listener");
+});
+socket.on('audio', function(msg){
+    console.log('audio received!');
+    audioCtx.decodeAudioData(msg.buffer, function(buffer) {
+    	audioBuffers[msg.index] = buffer;
+    	//console.log(audioBuffers);
+    	buffersAreLoaded = true;
+      }, 
+      function(error) {
+          console.error('decodeAudioData error', error);
+      });
+    listenButton.innerHTML = "Listen";
+});
+
+function testSound(index) {
+	var source = audioCtx.createBufferSource();
+	source.buffer = audioBuffers[index];
+	source.connect(audioCtx.destination);
+    source.start(audioCtx.currentTime);
+}
+
+function setupSynth() {
+	//creating our GranularSynthesizer
+	//buffer, grainsPerSec, minGrainDur, maxGrainDur, minVol, maxVol, minPitch, maxPitch
+	waterSynth = new GranularSynth(audioBuffers[0], 0.667, 5., 7., 0.7, 1., 0.9, 1.1);
+	waterSynth.connect(gainNode);
+	//waterSynth.play();
+}
+
+function completion() {
+	// previously used by buttonTest, not currently used, but provides a template for callbacks!
+	console.log("So crazy it might work!");
+}
+
+var listenButtonEnabled = true;
+var listenButton = document.getElementById('listen');
+listenButton.className = "off";
+listenButton.onclick = function() {
+	//consider adding a test so that the button won't make noise once the piece is underway
+	setupSynth();
+	listenButton.className = "on";
+	if (listenButtonEnabled) {
+		//testSound(0);
+	}
+	listenButton.innerHTML = "Listening...";
+};
+
+function setSliderValue(sliderIndex, sliderValue) {
+	switch (parseInt(sliderIndex)) {
+		case 0:
+			//density
+			console.log("slider 0!");
+			var minDensity = 0.1;
+			var maxDensity = 10.;
+			var density = (maxDensity - minDensity) * parseFloat(sliderValue) + minDensity;
+			//console.log(density);
+			waterSynth.grainsPerSec = density;
+			break;
+		case 1:
+			//minGrainDur
+			console.log("slider 1!");
+			var minVal = 0.1;
+			var maxVal = 5.;
+			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log(value);
+			waterSynth.minGrainDur = value;
+			break;
+		case 2:
+			//maxGrainDur
+			console.log("slider 2!");
+			var minVal = 0.1;
+			var maxVal = 7.;
+			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log(value);
+			waterSynth.maxGrainDur = value;
+			break;
+		case 3:
+			//minVol
+			console.log("slider 3!");
+			var minVal = 0.1;
+			var maxVal = 1.;
+			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log(value);
+			waterSynth.minVol = value;
+			break;
+		case 4:
+			//maxVol
+			console.log("slider 4!");
+			var minVal = 0.1;
+			var maxVal = 1.;
+			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log(value);
+			waterSynth.maxVol = value;
+			break;
+		case 5:
+			//minPitch
+			console.log("slider 5!");
+			var minVal = 0.125;
+			var maxVal = 8.;
+			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log(value);
+			waterSynth.minPitch = value;
+			break;
+		case 6:
+			//maxPitch
+			console.log("slider 6!");
+			var minVal = 0.125;
+			var maxVal = 8.;
+			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log(value);
+			waterSynth.maxPitch = value;
+			break;
+		default:
+			console.log("unrecognized slider");
+			break;
+	}
+}
+
+function stopEverything() {
+	if (waterSynth) {
+		waterSynth.stop();
+	}
+}
+
+//setting up our audio context and creating our master gain
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioCtx = new AudioContext();
+
+var gainNode = audioCtx.createGain();
+gainNode.connect(audioCtx.destination);
+gainNode.gain.value = 1.0;
+
+var audioBuffers = [];
+var buffersAreLoaded = false;
+
+//delaring our granular synth, to be initialized after audio is loaded.
+var waterSynth;
+
+</script>
+
+</body>
+</html>

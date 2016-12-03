@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LAMMA ISLAND COMMAND CENTER</title>
+</head>
+<body>
+
+<div id="buttons">
+
+<button id="panic">panic</button>
+<button id="onOff">off</button>
+
+</div>
+
+<div id="waterButtons"></div>
+
+density<br>
+<input id="slider0" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField0" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+min/max grain duration<br>
+<input id="slider1" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField1" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+<input id="slider2" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField2" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+min/max volume<br>
+<input id="slider3" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField3" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+<input id="slider4" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField4" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+min/max pitch<br>
+<input id="slider5" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField5" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+<input id="slider6" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
+<input id="textField6" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<br>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+var socket = io();
+socket.on('get type', function(msg){
+	//console.log("client's secret message is " + msg);
+	socket.emit('i am', "supreme leader");
+});
+
+var panicButton = document.getElementById('panic');
+panicButton.onclick = function() {
+	//emitControlMessage('/panic 1');
+	//nah, this should be global
+	socket.emit('control message', '/panic 1');
+};
+
+var onOffButton = document.getElementById('onOff');
+onOffButton.onclick = function() {
+	if (onOffButton.innerHTML == 'off') {
+		onOffButton.innerHTML = 'on';
+		emitControlMessage('/metro 1');
+	} else {
+		onOffButton.innerHTML = 'off';
+		emitControlMessage('/metro 0');
+	}
+};
+
+/*
+var waterButtons = document.getElementById("waterButtons");
+for (var i = 0; i <= 50; i++) {
+	var button = document.createElement("button");
+	button.setAttribute("id", "command" + i);
+	//button.setAttribute("disabled", true);
+	button.setAttribute("class", "off");
+	if (i < 10) {
+		i = "0" + i;
+	}
+	button.innerHTML = "Command " + i;
+	button.onclick = function () {
+		var button = this;
+		var index = button.id.slice(7);
+		emitControlMessage('/command ' + index);
+	}
+	vivaldiButtons.appendChild(button);
+}
+*/
+
+function showSliderValue(sender)
+{
+	var index = sender.id.slice(6);
+	var correspondingTextField = document.getElementById("textField" + index);
+	correspondingTextField.value = sender.value;
+	emitControlMessage('/slider/' + index + " " + sender.value);
+}
+
+function textFieldChangeValue(sender) {
+	var index = sender.id.slice(9);
+	var correspondingSlider = document.getElementById("slider" + index);
+	correspondingSlider.value = sender.value;
+	emitControlMessage('/slider/' + index + " " + sender.value);
+}
+
+function showSliderValuePercent(sender)
+{
+	var index = sender.id.slice(6);
+	var correspondingTextField = document.getElementById("textField" + index);
+	var scaledValue = (sender.value / 100.);
+	correspondingTextField.value = scaledValue;
+	emitControlMessage('/slider/' + index + " " + scaledValue);
+}
+
+function textFieldChangeValuePercent(sender) {
+	var index = sender.id.slice(9);
+	var correspondingSlider = document.getElementById("slider" + index);
+	correspondingSlider.value = sender.value * 100;
+	emitControlMessage('/slider/' + index + " " + sender.value);
+}
+
+function emitControlMessage(cm) {
+	socket.emit('control message', '/water' + cm);
+	console.log(cm);
+}
+</script>
+
+</body>
+</html>
