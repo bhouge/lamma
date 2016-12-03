@@ -15,30 +15,30 @@
 
 <div id="waterButtons"></div>
 
-density<br>
-<input id="slider0" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField0" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+density (grains per second)<br>
+<input id="slider0" type="range" min="10" max="5000" value="67" oninput="showSliderValuePercent(this)" />
+<input id="textField0" type="text" value="0.67" onchange="textFieldChangeValuePercent(this)" />
 <br>
 min/max grain duration<br>
-<input id="slider1" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField1" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<input id="slider1" type="range" min="10" max="500" value="500" oninput="showSliderValuePercent(this)" />
+<input id="textField1" type="text" value="5." onchange="textFieldChangeValuePercent(this)" />
 <br>
-<input id="slider2" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField2" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<input id="slider2" type="range" min="10" max="700" value="700" oninput="showSliderValuePercent(this)" />
+<input id="textField2" type="text" value="7." onchange="textFieldChangeValuePercent(this)" />
 <br>
 min/max volume<br>
-<input id="slider3" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField3" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<input id="slider3" type="range" min="0" max="100" value="70" oninput="showSliderValuePercent(this)" />
+<input id="textField3" type="text" value="0.7" onchange="textFieldChangeValuePercent(this)" />
 <br>
-<input id="slider4" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField4" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<input id="slider4" type="range" min="0" max="100" value="100" oninput="showSliderValuePercent(this)" />
+<input id="textField4" type="text" value="1." onchange="textFieldChangeValuePercent(this)" />
 <br>
 min/max pitch<br>
-<input id="slider5" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField5" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<input id="slider5" type="range" min="25" max="800" value="90" oninput="showSliderValuePercent(this)" />
+<input id="textField5" type="text" value="0.9" onchange="textFieldChangeValuePercent(this)" />
 <br>
-<input id="slider6" type="range" min="0" max="100" value="0" oninput="showSliderValuePercent(this)" />
-<input id="textField6" type="text" value="0" onchange="textFieldChangeValuePercent(this)" />
+<input id="slider6" type="range" min="25" max="800" value="110" oninput="showSliderValuePercent(this)" />
+<input id="textField6" type="text" value="1.1" onchange="textFieldChangeValuePercent(this)" />
 <br>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -123,6 +123,8 @@ function emitControlMessage(cm) {
 	socket.emit('control message', '/water' + cm);
 	console.log(cm);
 }
+
+
 </script>
 
 </body>

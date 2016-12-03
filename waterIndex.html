@@ -136,69 +136,71 @@ listenButton.onclick = function() {
 };
 
 function setSliderValue(sliderIndex, sliderValue) {
+	var sliderValueAsFloat = parseFloat(sliderValue);
 	switch (parseInt(sliderIndex)) {
 		case 0:
 			//density
-			console.log("slider 0!");
-			var minDensity = 0.1;
-			var maxDensity = 10.;
-			var density = (maxDensity - minDensity) * parseFloat(sliderValue) + minDensity;
+			//console.log("slider 0!");
+			//var minDensity = 0.1;
+			//var maxDensity = 10.;
+			//var density = (maxDensity - minDensity) * parseFloat(sliderValue) + minDensity;
+			var value = sliderValueAsFloat;
 			//console.log(density);
-			waterSynth.grainsPerSec = density;
+			waterSynth.grainsPerSec = value;
 			break;
 		case 1:
 			//minGrainDur
-			console.log("slider 1!");
-			var minVal = 0.1;
-			var maxVal = 5.;
-			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log("slider 1!");
+			//var minVal = 0.1;
+			//var maxVal = 5.;
+			//var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
 			//console.log(value);
-			waterSynth.minGrainDur = value;
+			waterSynth.minGrainDur = sliderValueAsFloat;
 			break;
 		case 2:
 			//maxGrainDur
-			console.log("slider 2!");
-			var minVal = 0.1;
-			var maxVal = 7.;
-			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log("slider 2!");
+			//var minVal = 0.1;
+			//var maxVal = 7.;
+			//var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
 			//console.log(value);
-			waterSynth.maxGrainDur = value;
+			waterSynth.maxGrainDur = sliderValueAsFloat;
 			break;
 		case 3:
 			//minVol
-			console.log("slider 3!");
-			var minVal = 0.1;
-			var maxVal = 1.;
-			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log("slider 3!");
+			//var minVal = 0.1;
+			//var maxVal = 1.;
+			//var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
 			//console.log(value);
-			waterSynth.minVol = value;
+			waterSynth.minVol = sliderValueAsFloat;
 			break;
 		case 4:
 			//maxVol
-			console.log("slider 4!");
-			var minVal = 0.1;
-			var maxVal = 1.;
-			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log("slider 4!");
+			//var minVal = 0.1;
+			//var maxVal = 1.;
+			//var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
 			//console.log(value);
-			waterSynth.maxVol = value;
+			waterSynth.maxVol = sliderValueAsFloat;
 			break;
 		case 5:
 			//minPitch
-			console.log("slider 5!");
-			var minVal = 0.125;
-			var maxVal = 8.;
-			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log("slider 5!");
+			//var minVal = 0.125;
+			//var maxVal = 8.;
+			//var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
 			//console.log(value);
-			waterSynth.minPitch = value;
+			waterSynth.minPitch = sliderValueAsFloat;
 			break;
 		case 6:
 			//maxPitch
-			console.log("slider 6!");
-			var minVal = 0.125;
-			var maxVal = 8.;
-			var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
+			//console.log("slider 6!");
+			//var minVal = 0.125;
+			//var maxVal = 8.;
+			//var value = (maxVal - minVal) * parseFloat(sliderValue) + minVal;
 			//console.log(value);
-			waterSynth.maxPitch = value;
+			waterSynth.maxPitch = sliderValueAsFloat;
 			break;
 		default:
 			console.log("unrecognized slider");
